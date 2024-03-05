@@ -202,11 +202,15 @@ BEGIN
     SET id_essay = SUBSTRING_INDEX(essay,':',1);
     SET value = SUBSTRING_INDEX(essay,':',-1);
 
-    --  Create new sample results 
-    INSERT INTO esmax_sample_results (id_sample, id_essay, id_protocol, value)
-    SELECT id_sample, id_essay, t1.id_protocol_type AS id_protocol, value 
-    FROM esmax_essays AS t1
-    WHERE t1.id = id_essay;
+    IF value != 'null' THEN
+
+      --  Create new sample results 
+      INSERT INTO esmax_sample_results (id_sample, id_essay, id_protocol, value)
+      SELECT id_sample, id_essay, t1.id_protocol_type AS id_protocol, value 
+      FROM esmax_essays AS t1
+      WHERE t1.id = id_essay;
+
+    END IF;
 
     SET essays = INSERT(essays, 1, IF(essays REGEXP ';', INSTR(essays, ';'), -1), '');
   END LOOP;
@@ -470,7 +474,8 @@ INSERT INTO esmax_sample_logs
   INNER JOIN esmax_components              AS t2 ON t1.id_component = t2.id
   INNER JOIN esmax_machines                AS t3 ON t2.id_machine = t3.id
   INNER JOIN esmax_sites                   AS t4 ON t3.id_site = t4.id
-  INNER JOIN esmax_clients                 AS t5 ON t4.id_client = t5.id;
+  INNER JOIN esmax_clients                 AS t5 ON t4.id_client = t5.id
+  WHERE t1.id = _id_sample;
 
 END//
 
@@ -504,3 +509,5 @@ CALL copy_sample_results();
 DROP PROCEDURE IF EXISTS copy_sample_results;
 DROP PROCEDURE IF EXISTS extract_essays;
 DROP PROCEDURE IF EXISTS create_report;
+
+TRUNCATE TABLE tmp_esmax;

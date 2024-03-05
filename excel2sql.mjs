@@ -71,7 +71,7 @@ const getWorksheet = async (filename) => {
   const header_names = headers.map(({ cell }) => cell);
 
   worksheet.eachRow((row, rowNumber) => {
-    console.log("Row " + rowNumber + " = " + JSON.stringify(row.values));
+    // console.log("Row " + rowNumber + " = " + JSON.stringify(row.values));
 
     const values = [];
     const essays = {};
