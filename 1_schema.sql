@@ -339,6 +339,7 @@ CREATE TABLE `esmax_logics` (
   `id_sample_condition` int(11) NOT NULL,
   `id_anomaly_type` int(11) NOT NULL,
   `id_sample_tracking_state` int(11) NOT NULL,
+  `recommendation` TEXT,
   `created` date DEFAULT current_timestamp(),
   PRIMARY KEY (`id`),
   KEY `id_state` (`id_state`),
