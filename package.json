@@ -1,0 +1,16 @@
+{
+  "name": "esmax_tmp",
+  "version": "1.0.0",
+  "main": "index.js",
+  "license": "MIT",
+  "scripts": {
+    "all": "yarn reset && yarn load \"$@\"",
+    "reset": "./reset.sh",
+    "load": "./load.sh \"$@\""
+  },
+  "dependencies": {
+    "exceljs": "^4.4.0",
+    "moment": "^2.30.1",
+    "mysql2": "^3.9.2"
+  }
+}
