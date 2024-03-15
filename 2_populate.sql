@@ -51,56 +51,155 @@ DELIMITER ;
 CALL copy_from_antofa();
 DROP PROCEDURE IF EXISTS copy_from_antofa;
 
-INSERT INTO esmax_protocols (name, id_protocol_type, id_client) VALUES 
-('Dummy AFQ', 1, 0), 
-('Dummy Metal', 2, 0);
+INSERT INTO esmax_protocols (id, name, id_protocol_type, id_client) VALUES 
+(1, 'Dummy AFQ', 1, 0),
+(2, 'Dummy Metal', 2, 0);
 
--- All lubricant protocols to dummy
-UPDATE esmax_lubricants SET id_protocol = 1;
+INSERT INTO esmax_protocols (id, name, id_protocol_type, id_client) 
+SELECT 
+  t1.id                    AS id, 
+  t1.name                  AS name, 
+  t1.id_protocol_type      AS id_protocol_type, 
+  0                        AS id_client
+FROM antofagasta_protocols AS t1 
+WHERE t1.id IN (
+-- Metal
+489,
+490,
+491,
+492,
+493,
+494,
+495,
+496,
+497,
+498,
+499,
+505,
+506,
+507,
+508,
+509,
+511,
+512,
+513,
+514,
+515,
+516,
+517,
+518,
+519,
+520,
+521,
+522,
+523,
+524,
+525,
+526,
+527,
+528,
+529,
+530,
+569,
+794,
+795,
+796,
+797,
+798,
+1511,
+-- AFQ
+29,
+30,
+31,
+37,
+38,
+39,
+41,
+42,
+43,
+76,
+77,
+78,
+79,
+80,
+121,
+37,
+138,
+139,
+140,
+141,
+142,
+408,
+409,
+410,
+-- AFQ - LUBRAX
+552,
+790,
+793,
+815,
+881,
+919,
+981,
+988,
+1013,
+-- AFQ - SHELL
+167,
+168,
+169,
+170,
+171,
+172,
+173,
+174,
+178,
+180,
+181,
+182,
+183,
+185,
+186,
+187,
+188,
+189,
+254,
+255,
+256,
+257,
+321,
+322,
+323,
+324,
+325,
+326,
+1352,
+1562,
+1579
+)
+ORDER BY t1.id;
+
+INSERT INTO esmax_essays_protocols (id_protocol, id_essay, lic, lim, lsm, lsc) 
+SELECT  
+  t2.id_protocol                         AS id_protocol, 
+  t2.id_essay                            AS id_essay, 
+  t2.lic                                 AS lic, 
+  t2.lim                                 AS lim, 
+  t2.lsm                                 AS lsm, 
+  t2.lsc                                 AS lsc 
+FROM esmax_protocols                     AS t1
+INNER JOIN antofagasta_essays_protocols  AS t2 ON t1.id = t2.id_protocol
+WHERE t1.id NOT IN (1, 2);
+
+-- All lubricant protocols to dummy by default
+UPDATE esmax_lubricants AS t1
+LEFT JOIN esmax_protocols AS t2 ON t1.id_protocol = t2.id
+SET id_protocol = 1
+WHERE t2.id IS NULL;
 
 INSERT INTO esmax_essays 
 (id, name, id_essay_unit, id_essay_analysis_method, id_essay_classification, id_result_type, id_result_unit, id_protocol_type) 
 VALUES 
 (58, 'Glycol', 1, 9, 4, 3, 0, 1);
 
-INSERT INTO esmax_essays_protocols (id_essay, id_protocol) VALUES 
-(  1, 2), 
-(  2, 2), 
-(  3, 2), 
-(  4, 2), 
-(  5, 2), 
-(  6, 2), 
-(  7, 2), 
-(  8, 2), 
-(  9, 2), 
-( 10, 2), 
-( 11, 2), 
-( 12, 2), 
-( 13, 2), 
-( 14, 2), 
-( 15, 2), 
-( 16, 1), 
-( 17, 1), 
-( 18, 1), 
-( 19, 1), 
-( 20, 1), 
-( 21, 1), 
-( 22, 1), 
-( 23, 1), 
-( 24, 1), 
-( 25, 1), 
-( 26, 1), 
-( 27, 1), 
-( 28, 1), 
-( 29, 1), 
-( 30, 1), 
-( 31, 1), 
-( 32, 1), 
-( 33, 1), 
-( 44, 1), 
-( 45, 1), 
-( 46, 1), 
-( 47, 1), 
-( 48, 1), 
-( 55, 1), 
-( 58, 1);
+
+
+
