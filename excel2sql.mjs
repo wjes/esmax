@@ -4,6 +4,9 @@ import moment from "moment";
 
 import { headers } from "./headers.mjs";
 
+const isEmpty = (value) =>
+  value === undefined || value === null || value === "";
+
 const getFilename = () => {
   const args = process.argv.slice(2);
   if (args.length === 0) {
@@ -125,14 +128,18 @@ const getWorksheet = async (filename) => {
               .format("YYYY-MM-DD HH:mm:00")
               .toString()}'`;
         } else if (header_names.indexOf("Código de Alarma") === index) {
-          const condition = cell.value.replace(/\s/g, "").toLowerCase();
+          const condition = isEmpty(cell.value)
+            ? "normal"
+            : cell.value.replace(/\s/g, "").toLowerCase();
           if (["normal", "ok"].includes(condition)) value = 1;
           else if (["alerta", "caution"].includes(condition)) value = 2;
           else if (["anormal", "abnormal", "severe"].includes(condition))
             value = 3;
           else value = 1;
         } else if (header_names.indexOf("Tipo Anomalía") === index) {
-          const anomaly = cell.value.replace(/\s/g, "").toLowerCase();
+          const anomaly = isEmpty(cell.value)
+            ? "normal"
+            : cell.value.replace(/\s/g, "").toLowerCase();
           if (anomaly === "normal") value = 1;
           else if (/^desgaste/.test(anomaly)) value = 2;
           else if (/^conta.*desgaste/.test(anomaly)) value = 3;
@@ -143,7 +150,9 @@ const getWorksheet = async (filename) => {
           else if (/^conta.*lubricante/.test(anomaly)) value = 8;
           else value = 1;
         } else if (header_names.indexOf("Estado Seguimiento") === index) {
-          const tracking_state = cell.value.replace(/\s/g, "").toLowerCase();
+          const tracking_state = isEmpty(cell.value)
+            ? "normal"
+            : cell.value.replace(/\s/g, "").toLowerCase();
           if (tracking_state === "normal") value = 1;
           else if (tracking_state === "falla") value = 2;
           else if (tracking_state === "alerta") value = 3;
